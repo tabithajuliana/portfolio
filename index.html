@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tabitha Juliana Sathish — Robotics Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #080c10;
+    --bg2: #0d1117;
+    --bg3: #111820;
+    --accent: #00e5ff;
+    --accent2: #7b2fff;
+    --amber: #ffb300;
+    --text: #e8edf3;
+    --muted: #6b7a8d;
+    --border: rgba(0,229,255,0.12);
+    --glow: 0 0 30px rgba(0,229,255,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(0,229,255,0.5);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none; z-index: 0;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px; color: var(--accent);
+    letter-spacing: 2px;
+  }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    font-size: 13px; color: var(--muted);
+    text-decoration: none; letter-spacing: 1px;
+    transition: color 0.2s;
+    font-family: 'Space Mono', monospace;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-bg-circle {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); pointer-events: none;
+  }
+  .hbc1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    animation: pulse 6s ease-in-out infinite;
+  }
+  .hbc2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(123,47,255,0.1) 0%, transparent 70%);
+    bottom: 0px; left: 200px;
+    animation: pulse 8s ease-in-out infinite reverse;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.08); }
+  }
+
+  .hero-content { max-width: 780px; position: relative; z-index: 1; }
+
+  .hero-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 3px; text-transform: uppercase;
+    border: 1px solid var(--accent);
+    padding: 6px 14px; border-radius: 2px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  h1.hero-name {
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 800; line-height: 1.0;
+    letter-spacing: -2px; margin-bottom: 20px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  h1.hero-name span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 18px; font-weight: 400;
+    color: var(--muted); line-height: 1.7;
+    max-width: 560px; margin-bottom: 40px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-chips {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 2px; color: var(--text);
+    background: rgba(255,255,255,0.03);
+    letter-spacing: 1px;
+  }
+  .chip.hot { border-color: rgba(0,229,255,0.4); color: var(--accent); background: rgba(0,229,255,0.05); }
+
+  .hero-cta {
+    display: flex; gap: 16px; align-items: center;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+  .btn-primary {
+    background: var(--accent); color: #080c10;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 2px; padding: 14px 28px;
+    border: none; border-radius: 2px;
+    cursor: none; text-decoration: none;
+    transition: all 0.2s; display: inline-block;
+  }
+  .btn-primary:hover { background: #fff; box-shadow: var(--glow); }
+  .btn-outline {
+    border: 1px solid var(--border); color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; letter-spacing: 2px; padding: 13px 28px;
+    border-radius: 2px; cursor: none; text-decoration: none;
+    transition: all 0.2s; display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .stats-bar {
+    background: var(--bg3);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 48px;
+    display: flex; align-items: center;
+    justify-content: space-around;
+    position: relative; z-index: 1;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px; color: var(--accent);
+    font-weight: 700; line-height: 1; margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .stat-divider { width: 1px; height: 48px; background: var(--border); }
+
+  section { padding: 100px 48px; position: relative; z-index: 1; }
+
+  .section-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 16px; display: block;
+  }
+  .section-title {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800; line-height: 1.1;
+    letter-spacing: -1px; margin-bottom: 16px;
+  }
+  .section-desc {
+    color: var(--muted); font-size: 16px;
+    line-height: 1.7; max-width: 520px; margin-bottom: 60px;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .project-card {
+    background: var(--bg2);
+    padding: 40px;
+    position: relative; overflow: hidden;
+    transition: background 0.3s;
+    cursor: none;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-card:hover { background: var(--bg3); }
+
+  .project-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 2px; margin-bottom: 20px; display: block;
+  }
+  .project-title {
+    font-size: 20px; font-weight: 700;
+    line-height: 1.3; margin-bottom: 14px; letter-spacing: -0.3px;
+  }
+  .project-title span { color: var(--accent); }
+  .project-desc {
+    font-size: 14px; color: var(--muted);
+    line-height: 1.75; margin-bottom: 16px;
+  }
+  .project-metric {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--amber);
+    background: rgba(255,179,0,0.08);
+    border: 1px solid rgba(255,179,0,0.2);
+    padding: 4px 10px; border-radius: 2px;
+    margin-bottom: 16px; margin-right: 6px;
+  }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .project-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 2px; color: var(--muted); letter-spacing: 0.5px;
+  }
+  .project-link {
+    display: inline-block; margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    text-decoration: none; letter-spacing: 1px;
+    border-bottom: 1px solid rgba(0,229,255,0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .project-link:hover { border-color: var(--accent); }
+
+  .project-card.featured {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: start;
+  }
+  .project-visual {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; color: var(--accent);
+    line-height: 2; overflow: hidden;
+    position: relative;
+  }
+  .project-visual::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, var(--bg3) 100%);
+  }
+
+  #skills { background: var(--bg2); }
+
+  .skills-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px; align-items: start;
+  }
+
+  .skill-category { margin-bottom: 40px; }
+  .skill-cat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--accent);
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 14px; display: block;
+  }
+  .skill-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill-item {
+    font-size: 13px; font-weight: 600;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 2px; transition: all 0.2s;
+  }
+  .skill-item:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.05); }
+  .skill-item.key { border-color: rgba(0,229,255,0.3); color: var(--text); background: rgba(0,229,255,0.06); }
+
+  .terminal {
+    background: #0a0e14;
+    border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden;
+    box-shadow: var(--glow);
+  }
+  .terminal-bar {
+    background: var(--bg3); padding: 12px 16px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .terminal-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--muted);
+    margin-left: 8px; letter-spacing: 1px;
+  }
+  .terminal-body { padding: 24px; font-family: 'Space Mono', monospace; font-size: 12px; line-height: 2; }
+  .t-prompt { color: var(--accent); }
+  .t-cmd { color: var(--text); }
+  .t-comment { color: var(--muted); font-style: italic; }
+  .t-output { color: #7ee787; }
+  .t-val { color: var(--amber); }
+
+  .research-card {
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 40px;
+    background: var(--bg2); margin-bottom: 20px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .research-card:hover { border-color: rgba(0,229,255,0.3); }
+  .research-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    border-radius: 0 2px 2px 0;
+  }
+  .research-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--accent2);
+    background: rgba(123,47,255,0.1);
+    border: 1px solid rgba(123,47,255,0.3);
+    padding: 4px 12px; border-radius: 20px;
+    display: inline-block; margin-bottom: 14px; letter-spacing: 1px;
+  }
+  .research-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .research-org {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 1px; margin-bottom: 16px;
+  }
+  .research-desc { font-size: 14px; color: var(--muted); line-height: 1.75; }
+
+  #relevance { background: var(--bg3); }
+  .relevance-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border); margin-top: 60px;
+  }
+  .relevance-card {
+    background: var(--bg2); padding: 40px;
+    cursor: none; transition: background 0.3s;
+  }
+  .relevance-card:hover { background: #131b24; }
+  .rel-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+  .rel-title { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+  .rel-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  #contact { text-align: center; background: var(--bg); }
+  .contact-box {
+    max-width: 600px; margin: 0 auto;
+    border: 1px solid var(--border); padding: 64px 48px;
+    background: var(--bg2); position: relative; overflow: hidden;
+  }
+  .contact-box::before {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .contact-links {
+    display: flex; justify-content: center; gap: 12px;
+    margin-top: 32px; flex-wrap: wrap;
+  }
+  .contact-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; color: var(--muted);
+    text-decoration: none; letter-spacing: 1px;
+    padding: 10px 20px; border: 1px solid var(--border);
+    border-radius: 2px; transition: all 0.2s;
+  }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    position: relative; z-index: 1;
+  }
+  footer p { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+  footer span { color: var(--accent); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+  .blink { animation: blink 1s step-end infinite; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    #hero { padding: 100px 20px 60px; }
+    .stats-bar { padding: 20px; gap: 16px; flex-wrap: wrap; }
+    .stat-divider { display: none; }
+    .skills-layout { grid-template-columns: 1fr; gap: 40px; }
+    .relevance-grid { grid-template-columns: 1fr; }
+    .project-card.featured { grid-template-columns: 1fr; }
+    .contact-box { padding: 40px 24px; }
+    footer { flex-direction: column; gap: 10px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">TJS — ROBOTICS</div>
+  <div class="nav-links">
+    <a href="#projects">Projects</a>
+    <a href="#research">Research</a>
+    <a href="#skills">Skills</a>
+    <a href="#relevance">Alignment</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-circle hbc1"></div>
+  <div class="hero-bg-circle hbc2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">✦ M.S. Robotics · UPenn · Available Summer 2026</div>
+    <h1 class="hero-name">Tabitha<br/>Juliana <span>Sathish</span></h1>
+    <p class="hero-sub">Robotics graduate researcher building autonomous systems — from safe multi-agent RL and real-time vision to hardware-validated manipulation and soft robotic systems.</p>
+    <div class="hero-chips">
+      <span class="chip hot">Reinforcement Learning</span>
+      <span class="chip hot">Computer Vision</span>
+      <span class="chip hot">ROS / MoveIt</span>
+      <span class="chip hot">Soft Robotics</span>
+      <span class="chip">PyTorch · TensorFlow</span>
+      <span class="chip">Python · C++</span>
+      <span class="chip">Gazebo · OpenCV</span>
+      <span class="chip">Multi-Agent Systems</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">VIEW PROJECTS</a>
+      <a href="#contact" class="btn-outline">GET IN TOUCH</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num" data-count="95" data-suffix="%">0%</div>
+    <div class="stat-label">Grasp Success Rate</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-num" data-count="30" data-suffix="%">0%</div>
+    <div class="stat-label">Over Baseline IPPO</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-num" data-count="62" data-suffix="%">0%</div>
+    <div class="stat-label">mAP — Vision Pipeline</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-num" data-count="5" data-suffix="">0</div>
+    <div class="stat-label">Hardware Projects</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-num" data-count="1" data-suffix="">0</div>
+    <div class="stat-label">Patent Filed</div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <span class="section-eyebrow">// 001 — Technical Work</span>
+  <h2 class="section-title">Projects</h2>
+  <p class="section-desc">End-to-end robotic systems — from simulation to hardware commissioning on real robot platforms.</p>
+
+  <div class="projects-grid">
+
+    <!-- Featured -->
+    <div class="project-card featured reveal">
+      <div class="project-content">
+        <span class="project-num">FEATURED / 01</span>
+        <div class="project-title">Robotic <span>Pick &amp; Place</span><br/>System</div>
+        <p class="project-desc">Autonomous pick-and-place on a Franka Emika Panda manipulator — full hardware commissioning including cable routing, end-effector calibration, and safety validation before live operation. AprilTag-based pose estimation feeds custom inverse kinematics for precise end-effector control.</p>
+        <p class="project-desc">Reactive grasp-triggering dynamically intercepts objects on a rotating turntable. Deployed and documented end-to-end: setup procedures, calibration guides, and troubleshooting protocols ready for handoff.</p>
+        <div>
+          <span class="project-metric">⚡ 95% Grasp Rate</span>
+          <span class="project-metric">🤖 Real Hardware</span>
+        </div>
+        <div class="project-tags">
+          <span class="project-tag">Python</span>
+          <span class="project-tag">ROS</span>
+          <span class="project-tag">OpenCV</span>
+          <span class="project-tag">MoveIt</span>
+          <span class="project-tag">AprilTag</span>
+          <span class="project-tag">Inverse Kinematics</span>
+        </div>
+        <a href="https://github.com/tabithajuliana" class="project-link" target="_blank">VIEW ON GITHUB →</a>
+      </div>
+      <div class="project-visual">
+        <div><span class="t-comment"># Franka Panda — grasp pipeline</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">ros2 launch panda_moveit demo.launch.py</span></div>
+        <div>&nbsp;</div>
+        <div><span class="t-comment"># AprilTag detection → pose estimation</span></div>
+        <div><span class="t-prompt">» </span><span class="t-output">tag_id=0  x=0.42  y=-0.11  z=0.31</span></div>
+        <div><span class="t-prompt">» </span><span class="t-output">orientation: [0.00, 0.71, 0.00, 0.71]</span></div>
+        <div>&nbsp;</div>
+        <div><span class="t-comment"># IK solver → motion planning</span></div>
+        <div><span class="t-prompt">» </span><span class="t-output">plan_success=True  joints=7</span></div>
+        <div><span class="t-prompt">» </span><span class="t-output">executing trajectory... ✓</span></div>
+        <div>&nbsp;</div>
+        <div><span class="t-comment"># Reactive grasp trigger</span></div>
+        <div><span class="t-prompt">» </span><span class="t-output">turntable_vel=12.3 rpm</span></div>
+        <div><span class="t-prompt">» </span><span class="t-val">GRASP TRIGGERED — intercept_t=0.31s</span></div>
+        <div><span class="t-prompt">» </span><span class="t-output">success_rate=<span class="t-val">95%</span>  [19/20 trials]</span></div>
+      </div>
+    </div>
+
+    <!-- Soft Robotics -->
+    <div class="project-card reveal">
+      <span class="project-num">02</span>
+      <div class="project-title">Soft Robotic Gripper —<br/><span>Underwater Exploration</span></div>
+      <p class="project-desc">Engineered a soft robotic gripper for marine applications featuring adaptive control and pressure sensing capabilities. Designed for compliant, damage-free object interaction in unstructured underwater environments where rigid grippers fail — integrating sensor feedback with real-time control loops for adaptive grasping.</p>
+      <span class="project-metric">🌊 Marine Application</span>
+      <span class="project-metric">🔬 Sensor Integration</span>
+      <div class="project-tags">
+        <span class="project-tag">Soft Robotics</span>
+        <span class="project-tag">Sensor Integration</span>
+        <span class="project-tag">Adaptive Control</span>
+        <span class="project-tag">Pressure Sensing</span>
+        <span class="project-tag">Control Systems</span>
+      </div>
+      <a href="https://github.com/tabithajuliana" class="project-link" target="_blank">VIEW ON GITHUB →</a>
+    </div>
+
+    <!-- MARL -->
+    <div class="project-card reveal">
+      <span class="project-num">03</span>
+      <div class="project-title">Safe <span>Multi-Agent RL</span><br/>Coordination</div>
+      <p class="project-desc">MAPPO-based multi-agent RL framework with Lagrangian constraint optimization. Multiple robots safely allocate collaborative tasks in shared environments — centralized critic enables globally-aware, constraint-respecting policy learning that outperforms decentralized baselines.</p>
+      <span class="project-metric">▲ +30% vs IPPO baseline</span>
+      <span class="project-metric">✓ 65% success rate</span>
+      <div class="project-tags">
+        <span class="project-tag">PyTorch</span>
+        <span class="project-tag">Stable-Baselines3</span>
+        <span class="project-tag">MAPPO</span>
+        <span class="project-tag">Constrained Optim.</span>
+        <span class="project-tag">Multi-Agent RL</span>
+      </div>
+      <a href="https://github.com/tabithajuliana" class="project-link" target="_blank">VIEW ON GITHUB →</a>
+    </div>
+
+    <!-- Vision -->
+    <div class="project-card reveal">
+      <span class="project-num">04</span>
+      <div class="project-title">Real-Time <span>Vision</span><br/>Pipeline</div>
+      <p class="project-desc">YOLOv8-Medium waste classification with ByteTrack multi-object tracking and temporal aggregation. Built for robustness under motion blur during active disposal — the tracking and detection architecture is directly applicable to mobile robot perception in dynamic environments.</p>
+      <span class="project-metric">📊 62.5% mAP</span>
+      <span class="project-metric">🔄 Real-time tracking</span>
+      <div class="project-tags">
+        <span class="project-tag">YOLOv8</span>
+        <span class="project-tag">OpenCV</span>
+        <span class="project-tag">ByteTrack</span>
+        <span class="project-tag">Python</span>
+        <span class="project-tag">Temporal Aggregation</span>
+      </div>
+      <a href="https://github.com/tabithajuliana" class="project-link" target="_blank">VIEW ON GITHUB →</a>
+    </div>
+
+    <!-- InsightQC -->
+    <div class="project-card reveal">
+      <span class="project-num">05</span>
+      <div class="project-title">InsightQC — <span>AI Defect</span><br/>Detection <small style="font-size:12px;color:var(--amber)">[Patent Filed]</small></div>
+      <p class="project-desc">AI-driven real-time defect detection and predictive maintenance system — from research prototype to filed patent. Combines computer vision with anomaly detection for industrial quality control, demonstrating the full arc from idea to intellectual property.</p>
+      <span class="project-metric">📄 Patent Filed</span>
+      <div class="project-tags">
+        <span class="project-tag">Computer Vision</span>
+        <span class="project-tag">Anomaly Detection</span>
+        <span class="project-tag">Predictive Maintenance</span>
+        <span class="project-tag">Python</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research" style="background: var(--bg2);">
+  <span class="section-eyebrow">// 002 — Academic Research</span>
+  <h2 class="section-title">Research</h2>
+  <p class="section-desc">Current work at the intersection of safety, autonomy, and multi-agent coordination.</p>
+
+  <div class="reveal">
+    <div class="research-card">
+      <span class="research-badge">ACTIVE — JAN 2026 → PRESENT</span>
+      <div class="research-title">Safe Multi-Agent Reinforcement Learning for Robotic Autonomy</div>
+      <div class="research-org">X-Labs, University of Pennsylvania · Philadelphia, PA</div>
+      <p class="research-desc">Developing constrained MAPPO for coordinated robotic decision-making under safety constraints — directly relevant to how autonomous robots must navigate shared, unpredictable environments. Building simulation environments and evaluation pipelines for safety-critical autonomy. Studying policy robustness under constraint violations to understand failure modes and recovery strategies.</p>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top: 20px;">
+    <div class="research-card">
+      <span class="research-badge">COURSEWORK — UPENN M.S. ROBOTICS</span>
+      <div class="research-title">Autonomous Systems — Navigation, Perception &amp; Learning</div>
+      <div class="research-org">University of Pennsylvania · Philadelphia, PA · Aug 2025 – Present</div>
+      <p class="research-desc">Introduction to Robotics (kinematics, motion planning, control), Machine Learning (policy gradient, model-based RL), Computer Vision &amp; Computational Intelligence (feature extraction, object recognition, depth estimation), Learning in Robotics (sim-to-real transfer, imitation learning, reward shaping).</p>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <span class="section-eyebrow">// 003 — Technical Stack</span>
+  <h2 class="section-title">Skills</h2>
+
+  <div class="skills-layout">
+    <div class="reveal">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <span class="terminal-title">tabitha@upenn ~ skills.sh</span>
+        </div>
+        <div class="terminal-body">
+          <div><span class="t-prompt">$ </span><span class="t-cmd">cat profile.json</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-val">"degree"</span><span class="t-cmd">: "M.S. Robotics, UPenn"</span></div>
+          <div><span class="t-val">"grad"</span><span class="t-cmd">: "May 2027"</span></div>
+          <div><span class="t-val">"focus"</span><span class="t-cmd">: [</span></div>
+          <div>&nbsp;&nbsp;<span class="t-output">"RL + Safe Autonomy"</span><span class="t-cmd">,</span></div>
+          <div>&nbsp;&nbsp;<span class="t-output">"Robot Manipulation"</span><span class="t-cmd">,</span></div>
+          <div>&nbsp;&nbsp;<span class="t-output">"Soft Robotics"</span><span class="t-cmd">,</span></div>
+          <div>&nbsp;&nbsp;<span class="t-output">"Real-Time Vision"</span></div>
+          <div><span class="t-cmd">]</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-prompt">$ </span><span class="t-cmd">echo $STATUS</span></div>
+          <div><span class="t-output">Available — Summer 2026</span><span class="blink">_</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="skill-category">
+        <span class="skill-cat-label">Core Robotics</span>
+        <div class="skill-items">
+          <span class="skill-item key">ROS / ROS2</span>
+          <span class="skill-item key">MoveIt</span>
+          <span class="skill-item key">Gazebo</span>
+          <span class="skill-item key">Soft Robotics</span>
+          <span class="skill-item">SLAM</span>
+          <span class="skill-item">Motion Planning</span>
+          <span class="skill-item">Manipulation</span>
+          <span class="skill-item">Inverse Kinematics</span>
+          <span class="skill-item">Sensor Integration</span>
+          <span class="skill-item">Adaptive Control</span>
+        </div>
+      </div>
+      <div class="skill-category">
+        <span class="skill-cat-label">Machine Learning & AI</span>
+        <div class="skill-items">
+          <span class="skill-item key">PyTorch</span>
+          <span class="skill-item key">TensorFlow</span>
+          <span class="skill-item key">Reinforcement Learning</span>
+          <span class="skill-item">MAPPO / IPPO</span>
+          <span class="skill-item">Constrained Optimization</span>
+          <span class="skill-item">YOLOv8</span>
+          <span class="skill-item">Sim-to-Real</span>
+          <span class="skill-item">Computer Vision</span>
+        </div>
+      </div>
+      <div class="skill-category">
+        <span class="skill-cat-label">Languages & Tools</span>
+        <div class="skill-items">
+          <span class="skill-item key">Python</span>
+          <span class="skill-item key">C++</span>
+          <span class="skill-item">MATLAB</span>
+          <span class="skill-item">OpenCV</span>
+          <span class="skill-item">ByteTrack</span>
+          <span class="skill-item">Git</span>
+          <span class="skill-item">SolidWorks</span>
+          <span class="skill-item">LaTeX</span>
+        </div>
+      </div>
+      <div class="skill-category">
+        <span class="skill-cat-label">Platforms & Cloud</span>
+        <div class="skill-items">
+          <span class="skill-item">Azure</span>
+          <span class="skill-item">Vertex AI</span>
+          <span class="skill-item">Oracle Cloud</span>
+          <span class="skill-item">JIRA / Confluence</span>
+          <span class="skill-item">UiPath</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALIGNMENT -->
+<section id="relevance">
+  <span class="section-eyebrow">// 004 — Role Alignment</span>
+  <h2 class="section-title">Why Autonomy<br/>Robotics</h2>
+  <p class="section-desc">How my current work connects to the problems I want to solve in the field.</p>
+
+  <div class="relevance-grid">
+    <div class="relevance-card reveal">
+      <span class="rel-icon">🧠</span>
+      <div class="rel-title">RL-Based Navigation</div>
+      <p class="rel-desc">My active research at X-Labs focuses on safe RL for coordinated robotic movement in shared environments — directly applicable to end-to-end navigation policies and hybrid SLAM + ML approaches in mobile autonomy.</p>
+    </div>
+    <div class="relevance-card reveal">
+      <span class="rel-icon">🌐</span>
+      <div class="rel-title">Simulation Development</div>
+      <p class="rel-desc">I build and maintain simulation environments and evaluation pipelines in Gazebo for safety-critical policy testing. Improving sim-to-real reliability is central to my current research workflow.</p>
+    </div>
+    <div class="relevance-card reveal">
+      <span class="rel-icon">👁️</span>
+      <div class="rel-title">Real-Time Perception</div>
+      <p class="rel-desc">My vision pipeline project (YOLOv8 + ByteTrack) demonstrates production-grade real-time perception under motion blur and occlusion — essential for autonomous robots navigating dynamic real-world spaces.</p>
+    </div>
+    <div class="relevance-card reveal">
+      <span class="rel-icon">🔧</span>
+      <div class="rel-title">Hardware Validation</div>
+      <p class="rel-desc">I've physically commissioned, calibrated, and validated a Franka Emika Panda arm — hardware setup, safety checks, live testing, and documented handoff. I'm comfortable owning the full loop from code to physical deployment.</p>
+    </div>
+    <div class="relevance-card reveal">
+      <span class="rel-icon">🌊</span>
+      <div class="rel-title">Adaptive &amp; Compliant Systems</div>
+      <p class="rel-desc">Designing a soft robotic gripper with pressure sensing for unstructured marine environments gave me deep experience with sensor-driven adaptive control — crucial for robots operating in unpredictable, real-world conditions.</p>
+    </div>
+    <div class="relevance-card reveal">
+      <span class="rel-icon">📚</span>
+      <div class="rel-title">Research → Production</div>
+      <p class="rel-desc">From patent filing (InsightQC) to curriculum development at UPenn's STEM Academy, I consistently take ideas from prototype to documented, deliverable form — I thrive on the research-to-production pipeline.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-box reveal">
+    <span class="section-eyebrow" style="display:block; text-align:center;">// 005 — Let's Talk</span>
+    <h2 class="section-title" style="font-size:36px; letter-spacing:-1px;">Ready to Build<br/>the Future of Autonomy</h2>
+    <p style="color:var(--muted); font-size:15px; line-height:1.7; margin-top:14px;">
+      M.S. Robotics @ UPenn · Available Summer 2026 · Philadelphia, PA · Eligible to work in the US
+    </p>
+    <div class="contact-links">
+      <a href="/cdn-cgi/l/email-protection#047065666d353244776165772a7174616a6a2a616071" class="contact-link">✉ <span class="__cf_email__" data-cfemail="acd8cdcec59d9aecdfc9cddf82d9dcc9c2c282c9c8d9">[email&#160;protected]</span></a>
+      <a href="https://www.linkedin.com/in/tabitha-juliana-sathish" class="contact-link" target="_blank">in LinkedIn</a>
+      <a href="https://github.com/tabithajuliana" class="contact-link" target="_blank">⌥ GitHub</a>
+      <a href="tel:+12674390096" class="contact-link">✆ +1-267-439-0096</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <span>Tabitha Juliana Sathish</span></p>
+  <p>Robotics Engineer · <span>Autonomy &amp; Systems</span></p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80);
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Count-up stats
+  function countUp(el, target, suffix) {
+    let val = 0;
+    const step = target / (1800 / 16);
+    const timer = setInterval(() => {
+      val = Math.min(val + step, target);
+      el.textContent = Math.floor(val) + suffix;
+      if (val >= target) clearInterval(timer);
+    }, 16);
+  }
+  const statsObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('[data-count]').forEach(el => {
+          countUp(el, pars
