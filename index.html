@@ -871,8 +871,14 @@
       if (val >= target) clearInterval(timer);
     }, 16);
   }
-  const statsObs = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        document.querySelectorAll('[data-count]').forEach(el => {
-          countUp(el, pars
+  // Count-up on load
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.querySelectorAll('[data-count]').forEach(el => {
+        countUp(el, parseInt(el.dataset.count), el.dataset.suffix || '');
+      });
+    }, 500);
+  });
+</script>
+</body>
+</html>
